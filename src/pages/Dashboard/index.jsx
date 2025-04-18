@@ -215,7 +215,7 @@ const Dashboard = () => {
         </Col>
       </Row>
       <Row className="summary-cards">
-        <Col md={8}>
+        <Col md={6}>
           <Row>
             {summaryData?.map((item, index) => (
               <Col key={index} md={4} className="mb-3">
@@ -224,8 +224,8 @@ const Dashboard = () => {
             ))}
           </Row>
         </Col>
-        <Col md={4}>
-          <LeadFunnelChart data={summaryData} />
+        <Col md={6}>
+          <LeadFunnelChart funnelData={summaryData} />
         </Col>
       </Row>
       <Row className="my-4">
