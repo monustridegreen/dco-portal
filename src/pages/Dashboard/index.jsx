@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [dashBoradData, setDashBoardData] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [leadListData, setLeadListData] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(null);
   const [pageDetails, setPageDetails] = useState({
     currentPage: 0,
     totalPages: 1,
@@ -41,6 +42,12 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const token = localStorage.getItem('access_token');
+
+  const handleCardClick = (status) => {
+    setSelectedStatus(status);
+    setCurrentPage(0);
+    getLeadListData(0, searchKey, status);
+  };
 
   const handleTimeRangeChange = (event) => {
     const selectedValue = event;
@@ -105,13 +112,13 @@ const Dashboard = () => {
     }
   };
 
-  const getLeadListData = async (page = 0, searchValue = searchKey) => {
+  const getLeadListData = async (page = 0, searchValue = searchKey, status = selectedStatus) => {
     try {
       setIsLoading(true);
       const data = await fetchLeadListData({
         currentPage: page,
         searchKey: searchValue,
-        statuses: null,
+        statuses: status, // Pass the selected status
         fromDate,
         toDate,
       });
@@ -156,36 +163,42 @@ const Dashboard = () => {
           count: dashBoradData?.totalLeads ?? 0,
           icon: <FontAwesomeIcon icon={faUsers} />,
           percentage: dashBoradData?.totalLeads ? 100 : 0,
+          status: '', // Static status
         },
         {
           title: 'In Progress',
           count: dashBoradData?.inProgressLeads ?? 0,
           icon: <FontAwesomeIcon icon={faSpinner} />,
           percentage: dashBoradData?.totalLeads ? ((dashBoradData?.inProgressLeads / dashBoradData?.totalLeads) * 100).toFixed(2) : 0,
+          status: 'IN_PROGRESS', // Static status
         },
         {
           title: 'Approved Leads',
           count: dashBoradData?.convertedLeads ?? 0,
           icon: <FontAwesomeIcon icon={faCheck} />,
           percentage: dashBoradData?.totalLeads ? ((dashBoradData?.convertedLeads / dashBoradData?.totalLeads) * 100).toFixed(2) : 0,
+          status: 'APPROVED', // Static status
         },
         {
           title: 'Rejected Leads',
           count: dashBoradData?.rejectedLeads ?? 0,
           icon: <FontAwesomeIcon icon={faBan} />,
           percentage: dashBoradData?.totalLeads ? ((dashBoradData?.rejectedLeads / dashBoradData?.totalLeads) * 100).toFixed(2) : 0,
+          status: 'REJECTED', // Static status
         },
         {
           title: 'Pending Leads',
           count: dashBoradData?.pendingLeads ?? 0,
           icon: <FontAwesomeIcon icon={faClock} />,
           percentage: dashBoradData?.totalLeads ? ((dashBoradData?.pendingLeads / dashBoradData?.totalLeads) * 100).toFixed(2) : 0,
+          status: 'PENDING', // Static status
         },
         {
           title: 'Disbursed Leads',
           count: dashBoradData?.disburseLeads ?? 0,
           icon: <FontAwesomeIcon icon={faMoneyBillWave} />,
           percentage: dashBoradData?.totalLeads ? ((dashBoradData?.disburseLeads / dashBoradData?.totalLeads) * 100).toFixed(2) : 0,
+          status: 'DISBURSED', // Static status
         },
       ]
     : [];
@@ -219,7 +232,7 @@ const Dashboard = () => {
           <Row>
             {summaryData?.map((item, index) => (
               <Col key={index} md={4} className="mb-3">
-                <LeadSummaryCard title={item.title} count={item.count} icon={item.icon} percentage={item.percentage} />
+                <LeadSummaryCard title={item.title} count={item.count} icon={item.icon} percentage={item.percentage} onClick={() => handleCardClick(item.status)} />
               </Col>
             ))}
           </Row>

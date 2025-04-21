@@ -1,5 +1,5 @@
 import './App.css';
-import basePath from './shared/basepath';
+// import basePath from './shared/basepath';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -10,8 +10,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LeadDetails from './pages/LeadDetails/index';
 
 function App() {
-  console.log('basePath', basePath.GRAPHQL_API_ENDPOINT);
-
   return (
     <>
       <Routes>

@@ -15,11 +15,19 @@ export const fetchLeadListData = async ({ currentPage, searchKey, statuses, from
       size: 10,
     };
 
+    // Add search key if provided
     if (searchKey) variables.searchKey = searchKey;
-    if (statuses) variables.status = statuses;
+
+    // Add statuses if provided and ensure it's an array
+    if (statuses) {
+      variables.status = statuses;
+    }
+
+    // Add date filters if provided
     if (fromDate) variables.startDate = formatDate(fromDate);
     if (toDate) variables.endDate = formatDate(toDate);
 
+    // Fetch data using the GraphQL query
     const { data } = await fetchGraphQL(getSearchCustomerLeadsForDashboardQuery, variables);
 
     return {
